@@ -25,4 +25,4 @@ The digital atelier of Ambrosia & Co. is forged with a curated selection of elit
 
 ---
 
-*Handcrafted with passion and precision by Shayan Ansari.*
+*Architectured by Shayan Ansari.*

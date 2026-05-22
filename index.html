@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ambrosia & Co. | Legendary Chocolate Artisans</title>
     <meta name="description"
-        content="Handcrafted luxury chocolates by Shayan Ansari. Experience resplendent indulgence with the world's finest cacao.">
-    <meta name="author" content="Shayan Ansari">
-    <meta name="site-identifier" content="Shayan">
+        content="Ambrosia & Co. | Handcrafted luxury chocolates. Experience resplendent indulgence with the world's finest cacao.">
+    <meta name="author" content="Ambrosia & Co.">
+    <meta name="site-identifier" content="Ambrosia">
 
     <!-- React & ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -87,6 +87,21 @@
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+
+        @keyframes scaleUp {
+            from {
+                opacity: 0;
+                transform: scale(0.92);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .animate-scale-up {
+            animation: scaleUp 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
 
         .animate-fade-in {
@@ -238,6 +253,7 @@
         const Plus = (props) => (<IconWrapper {...props}><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></IconWrapper>);
         const Package = (props) => (<IconWrapper {...props}><line x1="16.5" y1="9.4" x2="7.5" y2="4.21" /><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" /><polyline points="3.27 6.96 12 12.01 20.73 6.96" /><line x1="12" y1="22.08" x2="12" y2="12" /></IconWrapper>);
         const Eye = (props) => (<IconWrapper {...props}><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></IconWrapper>);
+        const AlertCircle = (props) => (<IconWrapper {...props}><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></IconWrapper>);
 
         // --- Product Data with Gallery Images ---
         const allProducts = [
@@ -431,9 +447,62 @@
         const Notification = ({ message, show }) => {
             if (!show) return null;
             return (
-                <div className="fixed top-24 right-4 z-[100] bg-cocoa text-gold px-6 py-4 rounded-lg shadow-2xl flex items-center gap-3 animate-fade-in border border-gold">
-                    <CheckCircle size={20} />
-                    <span className="font-medium">{message}</span>
+                <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[300] animate-fade-in px-4 w-full max-w-md">
+                    <div className="bg-gradient-to-r from-[#3E2723] via-[#4D312C] to-[#3E2723] text-gold px-6 py-4 rounded-full shadow-[0_10px_35px_rgba(0,0,0,0.6),0_0_20px_rgba(212,175,55,0.15)] flex items-center justify-center gap-3 border border-gold/45 backdrop-blur-md">
+                        <div className="flex items-center justify-center w-6 h-6 bg-gold/20 rounded-full flex-shrink-0">
+                            <CheckCircle size={14} className="text-gold" />
+                        </div>
+                        <span className="font-serif text-sm tracking-wide text-cream font-medium text-center">{message}</span>
+                    </div>
+                </div>
+            );
+        };
+
+        const CartLimitModal = ({ isOpen, onClose, productName }) => {
+            if (!isOpen) return null;
+            return (
+                <div className="fixed inset-0 z-[300] flex items-center justify-center px-4">
+                    {/* Backdrop */}
+                    <div 
+                        className="fixed inset-0 bg-black/75 backdrop-blur-md transition-opacity duration-300"
+                        onClick={onClose}
+                    />
+                    
+                    {/* Modal Box */}
+                    <div className="relative bg-gradient-to-b from-[#3E2723] to-[#20100E] border-2 border-gold/50 rounded-2xl max-w-md w-full p-8 md:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.75),0_0_40px_rgba(212,175,55,0.2)] text-center z-10 animate-scale-up">
+                        {/* Elegant Close Button */}
+                        <button 
+                            onClick={onClose}
+                            className="absolute top-4 right-4 text-cream/40 hover:text-gold transition-colors duration-200"
+                            aria-label="Close modal"
+                        >
+                            <X size={20} />
+                        </button>
+
+                        {/* Icon */}
+                        <div className="mx-auto w-16 h-16 bg-gold/10 rounded-full flex items-center justify-center border border-gold/30 mb-6 text-gold animate-pulse">
+                            <AlertCircle size={32} />
+                        </div>
+                        
+                        {/* Heading */}
+                        <h3 className="font-serif text-2xl text-gold font-bold mb-3 tracking-wide">Exquisite Selection Limit</h3>
+                        
+                        {/* Decorative Divider */}
+                        <div className="w-20 h-[1px] bg-gradient-to-r from-transparent via-gold to-transparent mx-auto mb-5"></div>
+                        
+                        {/* Message */}
+                        <p className="text-cream/90 text-sm leading-relaxed mb-8">
+                            To preserve the meticulous craftsmanship of our culinary art and ensure all patrons can experience these rare creations, each client is limited to a maximum of <strong className="text-gold font-bold">10 items</strong> of <span className="italic text-cream font-semibold">{productName || 'any signature confection'}</span> per order.
+                        </p>
+                        
+                        {/* Action Button */}
+                        <button
+                            onClick={onClose}
+                            className="w-full bg-gradient-to-r from-gold to-[#B38F2D] text-cocoa font-bold py-3.5 px-6 rounded-lg uppercase tracking-[0.2em] text-xs hover:from-cream hover:to-cream hover:shadow-[0_0_20px_rgba(250,243,224,0.3)] transition-all duration-300 shadow-md active:scale-95 border border-gold/40"
+                        >
+                            Continue Indulging
+                        </button>
+                    </div>
                 </div>
             );
         };
@@ -497,30 +566,33 @@
         };
 
         // --- Product Detail Overlay ---
-        const ProductDetail = ({ product, isOpen, onClose, onAddToCart }) => {
+        const ProductDetail = ({ product, isOpen, onClose, onAddToCart, cart, onShowLimitModal }) => {
             const [selectedImage, setSelectedImage] = useState(0);
             const [quantity, setQuantity] = useState(1);
             const [userRating, setUserRating] = useState(0);
             const [reviewText, setReviewText] = useState('');
             const [reviewSubmitted, setReviewSubmitted] = useState(false);
 
+            const existingItem = cart && product ? cart.find(item => item.id === product.id) : null;
+            const cartQty = existingItem ? existingItem.quantity : 0;
+            const maxAllowed = 10 - cartQty;
+
             useEffect(() => {
                 if (isOpen) {
                     document.body.style.overflow = 'hidden';
+                    setQuantity(maxAllowed > 0 ? 1 : 0);
                 } else {
                     document.body.style.overflow = 'auto';
                     setSelectedImage(0);
                     setQuantity(1);
                 }
                 return () => { document.body.style.overflow = 'auto'; };
-            }, [isOpen]);
+            }, [isOpen, maxAllowed]);
 
             if (!isOpen || !product) return null;
 
             const handleAddToCart = () => {
-                for (let i = 0; i < quantity; i++) {
-                    onAddToCart(product);
-                }
+                onAddToCart(product, quantity);
                 onClose();
             };
 
@@ -647,14 +719,21 @@
                                         <span className="text-cream font-medium">Quantity:</span>
                                         <div className="flex items-center gap-4 bg-white/5 rounded-lg px-4 py-2 border border-white/10">
                                             <button
-                                                onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                                                className="text-cream hover:text-gold transition-colors"
+                                                onClick={() => setQuantity(Math.max(maxAllowed > 0 ? 1 : 0, quantity - 1))}
+                                                className={`text-cream hover:text-gold transition-colors ${maxAllowed <= 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                                disabled={maxAllowed <= 0 || quantity <= 1}
                                             >
                                                 <Minus size={20} />
                                             </button>
                                             <span className="text-gold font-bold text-xl w-8 text-center">{quantity}</span>
                                             <button
-                                                onClick={() => setQuantity(quantity + 1)}
+                                                onClick={() => {
+                                                    if (quantity >= maxAllowed) {
+                                                        onShowLimitModal(product.title);
+                                                    } else {
+                                                        setQuantity(quantity + 1);
+                                                    }
+                                                }}
                                                 className="text-cream hover:text-gold transition-colors"
                                             >
                                                 <Plus size={20} />
@@ -662,12 +741,21 @@
                                         </div>
                                         <span className="text-cream/50">Total: <span className="text-gold font-bold">${(product.price * quantity).toFixed(2)}</span></span>
                                     </div>
-                                    <button
-                                        onClick={handleAddToCart}
-                                        className="w-full bg-gold text-cocoa py-4 font-bold uppercase tracking-widest hover:bg-white transition-all rounded-lg text-lg shadow-lg hover:shadow-xl"
-                                    >
-                                        Add to Cart — ${(product.price * quantity).toFixed(2)}
-                                    </button>
+                                    {maxAllowed <= 0 ? (
+                                        <button
+                                            onClick={() => onShowLimitModal(product.title)}
+                                            className="w-full bg-gold/10 border border-gold/45 text-gold py-4 font-bold uppercase tracking-widest rounded-lg text-lg hover:bg-gold/20 hover:text-white transition-all shadow-lg active:scale-[0.98]"
+                                        >
+                                            Limit Reached (10 in Cart)
+                                        </button>
+                                    ) : (
+                                        <button
+                                            onClick={handleAddToCart}
+                                            className="w-full bg-gold text-cocoa py-4 font-bold uppercase tracking-widest hover:bg-white transition-all rounded-lg text-lg shadow-lg hover:shadow-xl"
+                                        >
+                                            Add to Cart — ${(product.price * quantity).toFixed(2)}
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -1084,7 +1172,7 @@
                                 onClick={handleReturnHome}
                                 className="bg-gold text-cocoa px-10 py-4 font-bold uppercase tracking-widest hover:bg-white transition-all rounded-lg"
                             >
-                                Return to Shayan Homepage
+                                Return to Homepage
                             </button>
                         </div>
                     </div>
@@ -1577,41 +1665,41 @@
             <section className="pt-24 min-h-screen">
                 <div className="story-bg py-32 text-center">
                     <div className="container mx-auto px-6 animate-fade-in">
-                        <span className="text-gold uppercase tracking-[0.3em] font-bold text-sm">The Ambrosia Legacy</span>
-                        <h1 className="font-serif text-5xl md:text-7xl text-cream font-bold mt-4 leading-tight">From Bean to Bar,<br /><span className="italic">Resplendently Crafted.</span></h1>
+                        <span className="text-gold uppercase tracking-[0.3em] font-bold text-sm">The Ambrosia Concept</span>
+                        <h1 className="font-serif text-5xl md:text-7xl text-cream font-bold mt-4 leading-tight">Artisanal Design,<br /><span className="italic">Impeccably Architected.</span></h1>
                     </div>
                 </div>
                 <div className="bg-cream py-20">
                     <div className="container mx-auto px-6 max-w-4xl">
                         <div className="space-y-12 text-lg text-gray-700 leading-relaxed">
-                            <p className="animate-fade-in-up text-2xl font-light font-serif text-cocoa italic">"Every piece of chocolate whispers a tale of passion, artistry, and an unrelenting pursuit of the extraordinary."</p>
+                            <p className="animate-fade-in-up text-2xl font-light font-serif text-cocoa italic text-center">"A high-fidelity design showcase combining luxury aesthetics with modern web technologies."</p>
 
-                            {/* Founder Introduction */}
+                            {/* Portfolio Introduction */}
                             <div className="animate-fade-in-up bg-cocoa/5 rounded-xl p-8 border-l-4 border-gold" style={{ animationDelay: '0.2s' }}>
-                                <h3 className="font-serif text-2xl text-cocoa font-bold mb-4">Meet the Visionary</h3>
-                                <p className="text-gray-700">Founded in 2015 by <span className="text-cocoa font-bold">Shayan Ansari</span>, Ambrosia & Co. emerged from a singular vision: to craft chocolate that transcends the ordinary and enters the realm of the legendary. What began as a modest atelier has blossomed into a resplendent sanctuary for connoisseurs who demand nothing less than excellence.</p>
+                                <h3 className="font-serif text-2xl text-cocoa font-bold mb-4">About This Project</h3>
+                                <p className="text-gray-700">Welcome to <strong>Ambrosia & Co.</strong>, a conceptual e-commerce experience designed to showcase the pinnacle of digital craftsmanship. This platform is a mock storefront created for demonstration purposes, combining premium visual design, interactive React state management, and modern responsive layouts into a cohesive user journey.</p>
                             </div>
 
-                            <p className="animate-fade-in-up" style={{ animationDelay: '0.3s' }}>Shayan's journey into the art of chocolate-making was ignited during his travels through the cacao-rich valleys of Ecuador and the storied plantations of Ghana. There, amidst the atmospheric mist of ancient forests, he discovered a profound truth: that the finest chocolate is not merely made—it is cultivated with reverence, patience, and an intimate understanding of nature's gifts.</p>
+                            <p className="animate-fade-in-up" style={{ animationDelay: '0.3s' }}>Every interactive detail—from the responsive image carousels to the fluid navigation and the interactive checkout simulator—has been built with a focus on polished performance and design aesthetics. It demonstrates how rich layouts, subtle animations, and premium styling can elevate a digital experience to feel premium, engaging, and memorable.</p>
 
-                            <p className="animate-fade-in-up" style={{ animationDelay: '0.4s' }}>At Ambrosia & Co., we source exclusively from small, sustainable family farms, ensuring fair wages and preserving the ethereal quality that distinguishes our creations. Each bean is meticulously selected, ceremoniously roasted, and transformed through time-honored techniques into the velvety, opulent chocolate that has become our signature.</p>
+                            <p className="animate-fade-in-up" style={{ animationDelay: '0.4s' }}>This project utilizes a modern stack featuring HTML5, React, Tailwind CSS, and custom micro-animations to deliver a smooth Single Page Application (SPA) flow. It stands as a testament to the power of high-fidelity frontend design in bringing conceptual brands to life with clarity and elegance.</p>
 
                             <div className="grid md:grid-cols-3 gap-8 py-12 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
                                 <div className="text-center">
-                                    <div className="text-5xl font-serif text-gold font-bold">10+</div>
-                                    <div className="text-cocoa font-medium mt-2">Years of Excellence</div>
+                                    <div className="text-5xl font-serif text-gold font-bold">100%</div>
+                                    <div className="text-cocoa font-medium mt-2">Responsive Layout</div>
                                 </div>
                                 <div className="text-center">
-                                    <div className="text-5xl font-serif text-gold font-bold">50K+</div>
-                                    <div className="text-cocoa font-medium mt-2">Devoted Patrons</div>
+                                    <div className="text-5xl font-serif text-gold font-bold">React</div>
+                                    <div className="text-cocoa font-medium mt-2">Dynamic Core</div>
                                 </div>
                                 <div className="text-center">
-                                    <div className="text-5xl font-serif text-gold font-bold">15</div>
-                                    <div className="text-cocoa font-medium mt-2">Prestigious Awards</div>
+                                    <div className="text-5xl font-serif text-gold font-bold">Tailwind</div>
+                                    <div className="text-cocoa font-medium mt-2">Bespoke Design</div>
                                 </div>
                             </div>
 
-                            <p className="animate-fade-in-up text-xl font-serif text-cocoa text-center italic" style={{ animationDelay: '0.8s' }}>"In every creation, we infuse a piece of our soul." — Shayan Ansari, Founder</p>
+                            <p className="animate-fade-in-up text-xl font-serif text-cocoa text-center italic" style={{ animationDelay: '0.8s' }}>"Great digital experiences are the result of blending utility with sublime aesthetics."</p>
                         </div>
                     </div>
                 </div>
@@ -1735,7 +1823,7 @@
                             <span className="text-gold uppercase tracking-[0.2em] font-bold text-sm">Reach Out</span>
                             <h1 className="font-serif text-4xl md:text-5xl text-cocoa font-bold mt-2">Contact Us</h1>
                             <p className="text-gray-600 mt-4">We'd love to hear from you. Reach us at:</p>
-                            <a href="mailto:shayan@ambrosia.co" className="text-gold font-bold text-lg hover:text-cocoa transition-colors">shayan@ambrosia.co</a>
+                            <a href="mailto:concierge@ambrosia.co" className="text-gold font-bold text-lg hover:text-cocoa transition-colors">concierge@ambrosia.co</a>
                         </div>
                         {submitted ? (
                             <div className="bg-white rounded-lg p-12 text-center shadow-lg animate-fade-in">
@@ -1902,7 +1990,7 @@
                                     <CheckCircle className="text-gold flex-shrink-0 mt-1" size={20} />
                                     <div>
                                         <p className="font-medium text-cocoa">Dedicated Concierge</p>
-                                        <p className="text-sm">Email shayan@ambrosia.co for personalized assistance with any concerns.</p>
+                                        <p className="text-sm">Email concierge@ambrosia.co for personalized assistance with any concerns.</p>
                                     </div>
                                 </div>
                             </div>
@@ -2210,7 +2298,7 @@
             if (!isOpen) return null;
             const tweets = [
                 { date: "2h ago", text: "New Limited Edition: Our Midnight Velvet Truffles are available now. Only 500 boxes crafted. #LuxuryChocolate", likes: 847, retweets: 234 },
-                { date: "1d ago", text: "\"Chocolate is not a flavor, it's a philosophy.\" — Shayan Ansari, Founder of Ambrosia & Co.", likes: 1203, retweets: 456 },
+                { date: "1d ago", text: "\"Chocolate is not a flavor, it's a philosophy.\" — Master Chocolatier, Ambrosia & Co.", likes: 1203, retweets: 456 },
                 { date: "3d ago", text: "Thrilled to announce our partnership with @MichelinGuide for exclusive chocolate pairings at select restaurants worldwide. 🍫✨", likes: 2891, retweets: 892 }
             ];
             return (
@@ -2313,7 +2401,7 @@
                 instagram: "Connection established with Ambrosia & Co.",
                 twitter: "Connection established with Ambrosia & Co.",
                 facebook: "Connection established with Ambrosia & Co.",
-                newsletter: "Welcome to the inner circle, Shayan. You have joined the legend."
+                newsletter: "Welcome to the inner circle. You have joined the legend."
             };
             return (
                 <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[100] animate-fade-in">
@@ -2434,7 +2522,7 @@
                                         <div className="bg-gold/20 border border-gold/50 rounded-lg p-4 animate-fade-in">
                                             <div className="flex items-center gap-2 text-gold">
                                                 <CheckCircle size={18} />
-                                                <span className="font-medium font-serif text-lg">Welcome to the inner circle, Shayan</span>
+                                                <span className="font-medium font-serif text-lg">Welcome to the inner circle</span>
                                             </div>
                                             <p className="text-white/50 text-xs mt-2 italic font-light">You have joined the legend. Prepare for transcendent offerings.</p>
                                         </div>
@@ -2471,7 +2559,7 @@
                                 </div>
                             </div>
                             <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-white/40 text-sm">
-                                <p>&copy; 2026 Ambrosia & Co. | Shayan. All rights reserved.</p>
+                                <p>&copy; 2026 Ambrosia & Co. | Architectured by Shayan Ansari. All rights reserved.</p>
                                 <div className="flex gap-6 mt-4 md:mt-0">
                                     <button
                                         onClick={() => setSocialOverlay('instagram')}
@@ -2504,6 +2592,7 @@
             const [currentPage, setCurrentPage] = useState('home');
             const [cart, setCart] = useState([]);
             const [notification, setNotification] = useState({ show: false, message: '' });
+            const [limitModal, setLimitModal] = useState({ isOpen: false, productName: '' });
             const [isSearchOpen, setIsSearchOpen] = useState(false);
             const [isCartOpen, setIsCartOpen] = useState(false);
             const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
@@ -2512,26 +2601,55 @@
 
             const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-            const addToCart = (product) => {
+            const addToCart = (product, qty = 1) => {
+                let limitReached = false;
                 setCart(prev => {
                     const existing = prev.find(item => item.id === product.id);
                     if (existing) {
-                        return prev.map(item => item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item);
+                        const newQty = existing.quantity + qty;
+                        if (existing.quantity >= 10) {
+                            limitReached = true;
+                            return prev;
+                        }
+                        if (newQty > 10) {
+                            limitReached = true;
+                            return prev.map(item => item.id === product.id ? { ...item, quantity: 10 } : item);
+                        }
+                        return prev.map(item => item.id === product.id ? { ...item, quantity: newQty } : item);
                     }
-                    return [...prev, { ...product, quantity: 1 }];
+                    const initialQty = Math.min(10, qty);
+                    if (qty > 10) {
+                        limitReached = true;
+                    }
+                    return [...prev, { ...product, quantity: initialQty }];
                 });
-                setNotification({ show: true, message: `Added ${product.title} to cart` });
+                if (limitReached) {
+                    setLimitModal({ isOpen: true, productName: product.title });
+                } else {
+                    setNotification({ show: true, message: `Added ${product.title} to cart` });
+                }
                 setTimeout(() => setNotification({ show: false, message: '' }), 3000);
             };
 
             const updateQuantity = (id, delta) => {
+                let limitReached = false;
                 setCart(prev => prev.map(item => {
                     if (item.id === id) {
                         const newQty = item.quantity + delta;
+                        if (newQty > 10) {
+                            limitReached = true;
+                            return { ...item, quantity: 10 };
+                        }
                         return newQty > 0 ? { ...item, quantity: newQty } : item;
                     }
                     return item;
                 }).filter(item => item.quantity > 0));
+                if (limitReached) {
+                    const item = cart.find(i => i.id === id);
+                    if (item) {
+                        setLimitModal({ isOpen: true, productName: item.title });
+                    }
+                }
             };
 
             const removeFromCart = (id) => {
@@ -2578,10 +2696,11 @@
             return (
                 <div className="min-h-screen">
                     <Notification show={notification.show} message={notification.message} />
+                    <CartLimitModal isOpen={limitModal.isOpen} onClose={() => setLimitModal({ isOpen: false, productName: '' })} productName={limitModal.productName} />
                     <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} products={allProducts} onAddToCart={addToCart} onViewDetails={openProductDetail} />
                     <MiniCart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} cart={cart} updateQuantity={updateQuantity} removeFromCart={removeFromCart} onCheckout={() => setIsCheckoutOpen(true)} />
                     <CheckoutOverlay isOpen={isCheckoutOpen} onClose={() => setIsCheckoutOpen(false)} cart={cart} onComplete={() => setCart([])} onNavigate={navigate} />
-                    <ProductDetail product={selectedProduct} isOpen={!!selectedProduct} onClose={closeProductDetail} onAddToCart={addToCart} />
+                    <ProductDetail product={selectedProduct} isOpen={!!selectedProduct} onClose={closeProductDetail} onAddToCart={addToCart} cart={cart} onShowLimitModal={(name) => setLimitModal({ isOpen: true, productName: name })} />
                     <Header cartCount={cartCount} onSearchClick={() => setIsSearchOpen(true)} onCartClick={() => setIsCartOpen(true)} onNavigate={navigate} currentPage={currentPage} />
                     {renderPage()}
                     <Footer onNavigate={navigate} />
